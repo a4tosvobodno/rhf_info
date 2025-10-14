@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+
+  height: 100vh;
+}
+.left {
+  width: 200px;
+  background-color: burlywood;
+}
+.right {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

@@ -1,0 +1,99 @@
+
+import { useForm } from "react-hook-form"
+import { Left } from "../../components/layout/left/left"
+import { Right } from "../../components/layout/right/right"
+import styles from "./controlInformation.module.css"
+import { DevTool } from "@hookform/devtools";
+// import { useEffect } from "react";
+
+let renderCount = 0;
+export const Control = () => {
+
+    interface IData {
+        name: string,
+        lastName: string,
+    }
+    const form = useForm<IData>()
+    const { register, control, handleSubmit, watch, getValues, setValue } = form;
+    const onSubmit = (data: IData) => {
+        console.log(data)
+    }
+    // получение всех данных по клику
+    const getAllValues = () => {
+        console.log("Данные по клику", getValues())
+    }
+    // получение только имени
+    const getName = () => {
+        console.log(getValues("name"))
+    }
+    // получение данных, что в массиве 
+    const getSomeData = () => {
+        console.log(getValues(['name', 'lastName']))
+    }
+    // изменение только имени в форме при этом поля валидации (touch, dirty), не тригерятся в форме
+    const setName = () => {
+        setValue('name', 'ВалерААААА')
+    }
+    // изменение lastName в форме при этом поля валидации (touch, dirty),  тригерятся в форме 
+    const setTriggerLastName = () => {
+        setValue('lastName', 'Афанасьев', {
+            shouldDirty: true,
+            shouldTouch: true,
+            shouldValidate: true,
+        })
+    }
+    // следим только имя
+    const nameWatch = watch("name");
+    // следим и выводим се поля
+    const watchAll = watch(['name', 'lastName'])
+    // также следим за всем
+    const watchJSON = watch()
+
+
+    // при использовании юз еффекта, способом ниже, не происходит рерентдер компонента, в другом случае ререндер происходит.
+    // useEffect(() => {
+    //     const subscription = watch((value) => {
+    //         console.log(value)
+    //     })
+    //     return () => {
+    //         subscription.unsubscribe()
+    //     }
+    // }, [watch])
+
+    renderCount++
+    return (
+        <div className={styles.container}>
+            <Left>
+                <p>В данном блоке:</p>
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </Left>
+            <Right>
+
+                <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                    <p>счетчик рендера {renderCount / 2}</p>
+                    <div>ВСЕ ПОЛЯ: {watchAll}</div>
+                    <div>JSON :{JSON.stringify(watchJSON)}</div>
+                    <label htmlFor="name">Имя</label>
+                    <input id="name" {...register('name')} type='text' />
+                    {<p>ИМЯ: {nameWatch}</p>}
+
+                    <label htmlFor="lastName">Фамилия</label>
+                    <input id="lastName" {...register('lastName')} type='text' />
+
+
+                    <button type='submit'>Отправить</button>
+                    <button type="button" onClick={getAllValues}>Получить данные</button>
+                    <button type="button" onClick={getName}>Получить имя</button>
+                    <button type="button" onClick={setName}>Изменить имя</button>
+                    <button type="button" onClick={setTriggerLastName}>Изменить имя</button>
+                </form>
+                <DevTool control={control} />
+            </Right>
+        </div>
+
+    )
+}

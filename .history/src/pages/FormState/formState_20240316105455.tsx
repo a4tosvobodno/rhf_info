@@ -1,0 +1,71 @@
+import { useForm } from "react-hook-form"
+import { Left } from "../../components/layout/left/left"
+import { Right } from "../../components/layout/right/right"
+import styles from "./formState.module.css"
+import { DevTool } from "@hookform/devtools";
+
+
+export const FormState = () => {
+
+    interface IData {
+        name: string,
+        lastName: string,
+        social: {
+            vk: string,
+            tg: string
+        }
+
+    }
+
+    const form = useForm<IData>({
+        // в данном поле мы можем задать дефолтные значения для полей, и можем убрать дженерик <IData>
+        defaultValues: {
+            name: 'Валентин',
+            lastName: '',
+            social: {
+                vk: '',
+                tg: ''
+            }
+        }
+        // в том числе, мы можем сразу сделать запрос на дефолтные поля к беку, пример ниже, раcкоментируй, 
+        // не работает, при первом рендеере используй кнопку
+        // defaultValues: async () => {
+        //     const response = await fetch('https://jsonplaceholder.typicode.com/users/1')
+        //     const data = await response.json();
+        //     return {
+        //         name: 'Валентин',
+        //         lastName: data.username
+        //     }
+        // }
+    })
+    const { register, control, handleSubmit, formState } = form;
+    const onSubmit = (data: IData) => {
+        console.log(data)
+    }
+    // !!!!! ВАЖНО !!!! БЕЗ formState АСИНХРОННЫЕ ДЕФОЛТНОЕ ЗНАЧЕНИЕ НЕ БУДЕТ РАБОТАТЬ !!!!! ВАЖНО ЕГО ДОСТАТЬ И ЧТО ТО ИЗ НЕГО ВТАЩИТЬ, ДАЖЕ НЕ ИСПОЛЬЗУЯ
+    const { errors } = formState
+    return (
+        <div className={styles.container}>
+            <Left>FormState</Left>
+            <Right>
+                <form className={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
+                    <label htmlFor="name">Имя</label>
+                    <input id="name" {...register('name', { required: "Обязательное поле" })} type='text' />
+                    {errors.name?.message && <p style={{ color: "red" }}>{errors.name?.message}</p>}
+
+                    <label htmlFor="lastName">Фамилия</label>
+                    <input id="lastName" {...register('lastName', { required: "Обязательное поле" })} type='text' />
+                    {errors.lastName?.message && <p style={{ color: "red" }}>{errors.lastName?.message}</p>}
+                    <button type='submit'>Отправить</button>
+                </form>
+                <DevTool control={control} />
+            </Right>
+        </div>
+    )
+
+}
+
+
+
+
+

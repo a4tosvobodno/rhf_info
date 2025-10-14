@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  height: 99vh;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

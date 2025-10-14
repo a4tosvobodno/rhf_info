@@ -1,0 +1,58 @@
+
+import { useForm } from "react-hook-form"
+import { Left } from "../../components/layout/left/left"
+import { Right } from "../../components/layout/right/right"
+import styles from "./asyncValidation.module.css"
+import { DevTool } from "@hookform/devtools";
+
+export const Async = () => {
+
+    interface IData {
+        name: string,
+        lastName: string,
+
+    }
+
+    const form = useForm<IData>()
+    const { register, control, handleSubmit, formState } = form;
+    const { errors } = formState;
+    console.log(errors)
+    const onSubmit = (data: IData) => {
+        console.log(data)
+    }
+    return (
+        <div className={styles.container}>
+            <Left>
+                <p>В данном блоке:</p>
+                <ul>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+            </Left>
+            <Right>
+                <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+                    <label htmlFor="name">Имя</label>
+                    <input id="name" {...register('name')} type='text' />
+                    <label htmlFor="lastName">Фамилия</label>
+                    <input id="lastName" {...register('lastName', {
+                        required: {
+                            value: true,
+                            message: "Обязательное поле"
+                        },
+                        validate: {
+                            emailAvailable: async (fieldValue) => {
+                                const res = await fetch(`https://jsonplaceholder.typicode.com/users?username=${fieldValue}`)
+                                const data = await res.json()
+                                return data.length == 0 || "Фамилия уже есть"
+                            }
+                        }
+                    })} type='text' />
+                    { }
+                    <button type='submit'>Отправить</button>
+                </form>
+                <DevTool control={control} />
+            </Right>
+        </div>
+    )
+}

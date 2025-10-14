@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  height: 100vh;
+}
+.left {
+  width: 300px;
+  background-color: rgb(255, 231, 235);
+}
+.right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}

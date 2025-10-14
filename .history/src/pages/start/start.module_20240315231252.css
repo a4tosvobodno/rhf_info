@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  height: 100vh;
+}
+.left {
+  width: 200px;
+  background-color: burlywood;
+}
