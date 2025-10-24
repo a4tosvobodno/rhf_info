@@ -11,6 +11,8 @@ import { Control } from './pages/ControlInformation/controlInformation.tsx';
 import { Submit } from './pages/SubmissingForm/submissingFrom.tsx';
 import { Async } from './pages/AsyncValidation/asyncValidation.tsx';
 
+// просто рандомные изменения
+
 
 const router = createBrowserRouter([
   {
